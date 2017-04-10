@@ -9,5 +9,6 @@ app$run(port=8888)
 ```
 
 
-* Example call: ```localhost:8888/suggest?html=3&js=4&net=5&java=0&functional=0=&ios=0&android=1```
+* Example call to get dev suggestion: ```localhost:8888/suggestDev?html=3&js=4&net=5&java=0&functional=0=&ios=0&android=4```
+* Example call to get team suggestion: ```localhost:8888/suggestTeam?html=3&js=4&net=5&java=0&functional=0=&ios=0&android=4```
 
