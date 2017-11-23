@@ -1,0 +1,38 @@
+<h3>
+  <div>
+    <span>
+      <span>
+        <input  #user (keyup)="userChanged(user.value)" placeholder="Enter User ID" />
+      </span>
+      <span>
+        <select #team (change)="teamChanged(team.value)">
+          <option value="">Select Team</option>
+          <option *ngFor="let team of teams" value="{{team.id}}">{{team.name}}</option>
+        </select>
+      </span>
+      <span>
+        <select #location (change)="locationChanged(location.value)">
+          <option value="">Select Location</option>
+          <option *ngFor="let location of locations" value="{{location.id}}">{{location.name}}</option>
+        </select>
+      </span>
+    </span>
+  </div>
+  <div>Self Staffing Skills Input</div>
+</h3>
+<div class="grid grid-pad">
+  <a *ngFor="let skill of skills" class="col-1-4">
+    <div class="module skill">
+      <h4>
+      	<div><span>{{skill.name}}</span><span class="toast">{{currentUser.getRankingBySkill(skill.id)}}</span></div>
+      	<div class="adjust-ranking">
+      		<span (click)="decrementSkill(skill.id)">-</span>
+      		<span (click)="incrementSkill(skill.id)">+</span>
+  		  </div>
+  	  </h4>
+    </div>
+  </a>
+</div>
+
+
+<button (click)="save()">Save</button>
