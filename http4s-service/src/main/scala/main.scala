@@ -4,8 +4,8 @@ import org.http4s.server.blaze._
 
 object main extends App {
   val builder = BlazeBuilder[IO].bindHttp(8080, "localhost")
-    .mountService(services.yoService, "/test")
-    .mountService(services.distanceService, "/")
+    .mountService(routes.yoService, "/test")
+    .mountService(routes.distanceService, "/")
     .start
 
   var server: Server[IO] = _

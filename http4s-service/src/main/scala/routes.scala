@@ -1,13 +1,12 @@
 import cats.effect._
 import io.circe.generic.auto._
+import models.DistanceRequest
 import org.http4s._
 import org.http4s.circe._
 import org.http4s.dsl.io._
 
-case class Score(employeeId: String, scores: Seq[Int])
-case class DistanceRequest(a: Score, b: Score)
 
-object services {
+object routes {
   val yoService = HttpService[IO] {
     case GET -> Root / "hello" / name =>
       Ok(s"Hola, $name")
@@ -20,5 +19,4 @@ object services {
         Ok(knn.distance(r.a.scores, r.b.scores).toString)
       }
   }
-
 }
