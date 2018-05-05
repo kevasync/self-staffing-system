@@ -1,3 +1,3 @@
 package models
 
-case class Score(employeeId: String, scores: Seq[Int])
+case class Score(id: String, scores: Seq[Double])
