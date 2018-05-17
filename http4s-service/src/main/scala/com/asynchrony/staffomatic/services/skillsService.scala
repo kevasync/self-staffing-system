@@ -1,4 +1,6 @@
-import models._
+package com.asynchrony.staffomatic.services
+
+import com.asynchrony.staffomatic.models.{Score, SkillDto}
 
 case class Person(employeeId: String, team: String, scores: Seq[Double]){
   val individualScore = Score(employeeId, scores)

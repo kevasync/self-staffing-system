@@ -1,7 +1,10 @@
-import models.Score
+package com.asynchrony.staffomatic.services
+
+import com.asynchrony.staffomatic.models.Score
+
 import scala.math.{pow, sqrt}
 
-object knn {
+object knnService {
   def topN(ref: Score, trainingData: Seq[Score], n: Int): Seq[(Score, Double)] =
     trainingData.par.map(x => x -> distance(ref.scores, x.scores)).toList
       .sortWith((x, y) => x._2 < y._2)
