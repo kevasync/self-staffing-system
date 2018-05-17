@@ -1,7 +1,7 @@
 package com.asynchrony.staffomatic
 
 import cats.effect._
-import com.asynchrony.staffomatic.dao.personDao
+import com.asynchrony.staffomatic.dao.skillsDao
 import com.asynchrony.staffomatic.models.{DistanceRequest, KnnRequest, KnnResponse}
 import com.asynchrony.staffomatic.services.{knnService, skillsService}
 import io.circe.generic.auto._
@@ -9,8 +9,9 @@ import io.circe.syntax._
 import org.http4s._
 import org.http4s.circe._
 import org.http4s.dsl.io._
-
+import com.asynchrony.staffomatic.dao.skillsDb._
 object routes {
+
   val yo = HttpService[IO] {
     case GET -> Root / "hello" / name =>
       Ok(s"Hola, $name")
@@ -18,7 +19,6 @@ object routes {
 
   implicit val distanceReqDecoder: EntityDecoder[IO, DistanceRequest] = jsonOf
   implicit val knnReqDecoder: EntityDecoder[IO, KnnRequest] = jsonOf
-
   private val defaultNumberOfSuggestions = 2
 
   val knn = HttpService[IO] {
@@ -42,9 +42,10 @@ object routes {
         )
       }
   }
-
   val skillsDb = HttpService[IO] {
-    case GET -> Root / "people"  =>
-      Ok(personDao.get.asJson)
+    case GET -> Root / "people" => Ok(skillsDao.get(people).asJson)
+    case GET -> Root / "skills" => Ok(skillsDao.get(skills).asJson)
+    case GET -> Root / "scores" => Ok(skillsDao.get(scores).asJson)
   }
+
 }
