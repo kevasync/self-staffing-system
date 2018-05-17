@@ -14,6 +14,8 @@ libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-blaze-server" % http4sVersion,
   "org.http4s" %% "http4s-blaze-client" % http4sVersion,
   "org.http4s" %% "http4s-circe" % http4sVersion,
+  "org.squeryl" %% "squeryl" % "0.9.5-7",
+  "net.sourceforge.jtds" % "jtds" % "1.3.1",
 
   "io.circe" %% "circe-generic" % circeVersion,
   "io.circe" %% "circe-literal" % circeVersion

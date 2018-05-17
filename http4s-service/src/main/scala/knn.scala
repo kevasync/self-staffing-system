@@ -18,5 +18,5 @@ object knn {
 
   //https://gist.github.com/hanbei/6357444
   def distance(x: Seq[Double], y: Seq[Double]): Double =
-    sqrt(x.zip(y).map(n => pow(n._1.toDouble - n._2.toDouble, 2)).sum)
+    sqrt(x.zip(y).map(n => pow(n._1 - n._2, 2)).sum)
 }

@@ -1,7 +1,7 @@
 import cats.effect._
 import io.circe.generic.auto._
 import io.circe.syntax._
-import models.{DistanceRequest, KnnRequest, KnnResponse}
+import models._
 import org.http4s._
 import org.http4s.circe._
 import org.http4s.dsl.io._
@@ -15,7 +15,7 @@ object routes {
   implicit val distanceReqDecoder: EntityDecoder[IO, DistanceRequest] = jsonOf
   implicit val knnReqDecoder: EntityDecoder[IO, KnnRequest] = jsonOf
 
-  private val defaultNumberOfSuggestions = 5
+  private val defaultNumberOfSuggestions = 2
 
   val knnService = HttpService[IO] {
     case req@POST -> Root / "distance" =>
@@ -25,8 +25,7 @@ object routes {
     case req@POST -> Root / "knn" =>
       req.decode[KnnRequest] { r =>
         Ok(KnnResponse(
-          knn.topN(r.score, skillsService.trainingData().map(_.individualScore), defaultNumberOfSuggestions)
-            .map(_._1.id)
+          knn.topN(r.score, skillsService.trainingData().map(_.individualScore), defaultNumberOfSuggestions).map(_._1.id)
         ).asJson)
       }
     case req@POST -> Root / "knnByTeam" =>
