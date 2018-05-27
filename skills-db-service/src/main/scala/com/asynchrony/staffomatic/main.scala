@@ -6,13 +6,13 @@ import org.http4s.server.Server
 import org.http4s.server.blaze._
 import org.squeryl.adapters.MSSQLServer
 import org.squeryl.{Session, SessionFactory}
-
+import org.http4s.server.middleware._
 
 object main extends App {
-  val builder = BlazeBuilder[IO].bindHttp(8080, "localhost")
-    .mountService(routes.yo, "/test")
-    .mountService(routes.knn, "/")
-    .mountService(routes.skillsDb, "/skills")
+  val builder = BlazeBuilder[IO].bindHttp(8081, "localhost")
+    .mountService(CORS(routes.yo), "/test")
+    .mountService(CORS(routes.knn), "/")
+    .mountService(CORS(routes.skillsDb), "/skills")
     .start
 
   var server: Server[IO] = _

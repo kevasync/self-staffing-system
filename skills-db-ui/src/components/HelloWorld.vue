@@ -1,18 +1,18 @@
 <template>
   <div class="hello">
     <h1>Staff O' Matic</h1>
-    <h3>powered by vue.js</h3>
     <div>
       <div>
-        <h4>Pick a skill:</h4>
+        <h4>Tap to toggle skills:</h4>
           <ul>
-            <li v-for="c in filteredCategories" v-on:click="selectSkill(c)">{{ c }}</li>
+            <li v-for="s in filteredSkills" v-on:click="selectSkill(s)">{{ s }}</li>
           </ul>
       </div>
-      <div><input type="text" v-model="categoryFilter" @change="filterCategories"></div>
-      <div>
+      <div><input type="text" v-model="categoryFilter" @change="filterSkills"></div>
+      <div v-if="selectedSkills.length > 0">
         <h3>{{ selectedSkills.length }} skills selected:</h3>
         <ul>
+
             <li v-for="s in selectedSkills">{{ s }}</li>
         </ul>
       </div>
@@ -21,24 +21,26 @@
 </template>
 
 <script>
-let categories = ['js', 'html', 'java']
+import axios from 'axios'
+var skills = []
+
 export default {
   name: 'HelloWorld',
   data () {
     return {
       counter: 0, 
-      filteredCategories: categories,
+      filteredSkills: [],
       categoryFilter: '',
       selectedSkills: []
     }
   },
   methods: {
-    filterCategories: function (event) {
+    filterSkills: function (event) {
       if(this.categoryFilter.length > 1) {
-        this.filteredCategories = categories.filter(c => c.toLowerCase().startsWith(this.categoryFilter.toLowerCase()))
+        this.filteredSkills = skills.filter(c => c.toLowerCase().startsWith(this.categoryFilter.toLowerCase()))
       }
       else {
-       this.filteredCategories = categories 
+       this.filteredSkills = skills 
       } 
     },
     selectSkill: function(skill) {
@@ -49,6 +51,19 @@ export default {
         this.selectedSkills.splice(i, 1)
       }
     }
+  },
+  created: function() {
+    axios.get(`http://localhost:8081/skills/skills`, {
+      headers: { 
+      'Access-Control-Allow-Origin' : '*',
+      'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+      }
+    })
+    .then(response => { 
+      skills = response.data.map(x => x.skill)
+      this.filteredSkills = skills
+    })
+    .catch(e => console.log(e))
   }
 }
 </script>
