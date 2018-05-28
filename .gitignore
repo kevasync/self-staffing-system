@@ -61,4 +61,5 @@ vignettes/*.pdf
 /web/.vscode
 /web/*.log
 /web/*.stackdump
-
+target/
+npm-debug.log
