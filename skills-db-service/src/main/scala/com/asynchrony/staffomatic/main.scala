@@ -10,9 +10,10 @@ import org.http4s.server.middleware._
 
 object main extends App {
   val builder = BlazeBuilder[IO].bindHttp(8081, "localhost")
-    .mountService(CORS(routes.yo), "/test")
-    .mountService(CORS(routes.knn), "/")
+    .mountService(CORS(routes.yo), "/")
+    .mountService(CORS(routes.knn), "/knn")
     .mountService(CORS(routes.skillsDb), "/skills")
+    .mountService(CORS(routes.suggestion), "/suggestions")
     .start
 
   var server: Server[IO] = _

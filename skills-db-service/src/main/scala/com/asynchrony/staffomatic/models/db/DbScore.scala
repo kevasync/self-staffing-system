@@ -8,3 +8,7 @@ class DbScore(@Column("SkillID") val skillId: Int,
               @Column("SkillYearsOfExperience") val yearsExperience: Option[Int]) {
   def this() = this(0, 0, None, None)
 }
+
+object DbScore {
+  def apply(id: Int, person: Int) = new DbScore(id, person, None, None)
+}
