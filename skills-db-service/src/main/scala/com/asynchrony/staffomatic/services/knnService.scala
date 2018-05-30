@@ -25,11 +25,11 @@ object knnService {
               .toDouble))
     })
 
-    val winnerPersonIds = topN(referenceScore, normalizedScoresByPerson, numberToReturn).map(_._1.id)
+    val topNPeopleIds = topN(referenceScore, normalizedScoresByPerson, numberToReturn).map(_._1.id)
 
     skillsDao.get(people)
-      .filter(person => winnerPersonIds.contains(person.id.toString))
-      .sortBy(person => winnerPersonIds.indexOf(person.id.toString))
+      .filter(person => topNPeopleIds.contains(person.id.toString))
+      .sortBy(person => topNPeopleIds.indexOf(person.id.toString))
   }
 
   def topN(ref: Score, trainingData: Seq[Score], n: Int): Seq[(Score, Double)] =

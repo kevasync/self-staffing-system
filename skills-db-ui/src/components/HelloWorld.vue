@@ -1,31 +1,50 @@
 <template>
   <div class="hello">
-    <h1>Staff O' Matic</h1>
+    <h1>Staff o' Matic</h1>
     <div>
       <div>
-        <h3>Tap to toggle skills:</h3>
+        <h3>Tap to Toggle Skills:</h3>
           <ul>
             <li v-for="s in filteredSkills" v-on:click="selectSkill(s)">{{ s.skill }}</li>
           </ul>
       </div>
-      <h3>Filter skills</h3>
+      
       <div>
-        <span>By Name: <input type="text" v-model="skillFilter" v-on:keyup="filterSkills"></span>
+        <h3>Filter Skills:</h3>
+        <div>
+          <span>By name: <input type="text" v-model="skillFilter" v-on:keyup="filterSkills"></span>
+        </div>
+        <div>
+          By catagory:
+          <ul class="categoryFilterList">
+              <li v-for="c in categories" v-on:click="filterOnCategory(c)">{{ c }}</li>
+          </ul>
+          <div v-if="skillFilter != ''">
+            <span class="filterIndicator">Filtering skills by {{ skillFilter }}</span>
+          </div>
+          <div v-if="categoryFilter != ''">
+            <span class="filterIndicator">Filtering by category {{ categoryFilter }}</span>  
+          </div>
+          <div v-if="!(categoryFilter == '' && skillFilter == '')">
+            <h4 v-on:click="clearFilter()">Clear filter</h4>
+          </div>
+        </div>
       </div>
-      <div>
-        By catagory:
-        <ul class="categoryFilterList">
-            <li v-on:click="clearFilter()">Clear filter</li>
-            <li v-for="c in categories" v-on:click="filterOnCategory(c)">{{ c }}</li>
-        </ul>
-        <span class="filterIndicator" v-if="skillFilter !== undefined">Filtering skills by {{ skillFilter }}</span>
-        <span class="filterIndicator" v-if="categoryFilter !== undefined">Filtering by category {{ categoryFilter }}</span>
-      </div>
+      
       <div v-if="selectedSkills.length > 0">
-        <h3>{{ selectedSkills.length }} skills selected:</h3>
+        <h3>{{ selectedSkills.length }} skill(s) selected:</h3>
         <ul>
             <li v-for="s in selectedSkills">{{ s.skill }}</li>
         </ul>
+        <div>
+          <h3 v-on:click="getSuggestions()">Get suggestions...</h3>
+        </div>
+        <div v-if="suggestedPeople.length > 0">
+          <h4>Suggestions:</h4>
+          <ul>
+            <li v-for="p in suggestedPeople">{{ p.firstName }} {{ p.lastName }}</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -41,10 +60,11 @@ export default {
     return {
       counter: 0, 
       filteredSkills: [],
-      skillFilter: undefined,
+      skillFilter: '',
       selectedSkills: [],
-      categoryFilter: undefined,
-      categories: []
+      categoryFilter: '',
+      categories: [],
+      suggestedPeople: []
     }
   },
   methods: {
@@ -66,6 +86,7 @@ export default {
       } else {
         this.selectedSkills.splice(i, 1)
       }
+      this.suggestedPeople = []
     },
     filterOnCategory: function(category) {
       console.log(category)
@@ -77,8 +98,22 @@ export default {
     },
     clearFilter: function() {
       this.filteredSkills = skills
-      this.categoryFilter = undefined
-      this.skillFilter = undefined
+      this.categoryFilter = ''
+      this.skillFilter = ''
+    },
+    getSuggestions: function() {
+      axios.post(`http://localhost:8081/suggestions/top5`, 
+      {
+        skillIds: this.selectedSkills.map(x => x.id),
+        headers: { 
+        'Access-Control-Allow-Origin' : '*',
+        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+        }
+      })
+      .then(response => { 
+        this.suggestedPeople = response.data
+      })
+      .catch(e => console.log(e))
     }
   },
   created: function() {
