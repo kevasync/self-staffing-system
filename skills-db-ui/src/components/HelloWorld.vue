@@ -4,7 +4,7 @@
     <div>
       <div>
         <h3>Tap to Toggle Skills:</h3>
-          <ul>
+          <ul class="scrollingList">
             <li v-for="s in filteredSkills" v-on:click="selectSkill(s)">{{ s.skill }}</li>
           </ul>
       </div>
@@ -15,18 +15,18 @@
           <span>By name: <input type="text" v-model="skillFilter" v-on:keyup="filterSkills"></span>
         </div>
         <div>
-          By catagory:
-          <ul class="categoryFilterList">
+          <div>By catagory:</div>
+          <ul class="scrollingList categoryFilterList">
               <li v-for="c in categories" v-on:click="filterOnCategory(c)">{{ c }}</li>
           </ul>
           <div v-if="skillFilter != ''">
-            <span class="filterIndicator">Filtering skills by {{ skillFilter }}</span>
+            <h4 class="filterIndicator">Filtered by {{ skillFilter }}</h4>
           </div>
           <div v-if="categoryFilter != ''">
-            <span class="filterIndicator">Filtering by category {{ categoryFilter }}</span>  
+            <h4 class="filterIndicator">Filtering by category {{ categoryFilter }}</h4>  
           </div>
           <div v-if="!(categoryFilter == '' && skillFilter == '')">
-            <h4 v-on:click="clearFilter()">Clear filter</h4>
+            <h3 v-on:click="clearFilter()">Clear filter</h3>
           </div>
         </div>
       </div>
@@ -36,6 +36,7 @@
         <ul>
             <li v-for="s in selectedSkills">{{ s.skill }}</li>
         </ul>
+        <span v-on:click="selectedSkills = []">Clear skills...</span>
         <div>
           <h3 v-on:click="getSuggestions()">Get suggestions...</h3>
         </div>
@@ -111,7 +112,11 @@ export default {
         }
       })
       .then(response => { 
-        this.suggestedPeople = response.data
+        if(response.data.length > 0) {
+          this.suggestedPeople = response.data
+        } else {
+          this.suggestedPeople = [{firstName: 'No one matched your criteria', lastName: '', id: -1}]
+        }
       })
       .catch(e => console.log(e))
     }
@@ -154,5 +159,11 @@ a {
 }
 .filterIndicator {
   display: block;
+}
+
+.scrollingList {
+  max-height: 300px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 </style>
